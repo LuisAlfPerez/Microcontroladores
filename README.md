@@ -65,6 +65,9 @@ Para realizar un switch, se toma el valor del resultado y se decrementa en 1. Es
 * ANDLW
 > Realiza la operación AND entre una constante y el contenido del acumulador.
 
+# Esquemático
+![Esquemático](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica1/EsquematicoP1.PNG)
+
 ## Código
   	;*******Header Files***********
   	    list	    p=18f4550        ; list directive to define processor
@@ -314,9 +317,6 @@ Para realizar un switch, se toma el valor del resultado y se decrementa en 1. Es
 		
   			END
 			
-# Esquemático
-![Esquemático](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica1/EsquematicoP1.PNG)
-
 # Simulación Proteus
 Link: [Video de Youtube](https://youtu.be/j6OHJU-kuHc)
 
