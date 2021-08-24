@@ -313,6 +313,9 @@ Para realizar un switch, se toma el valor del resultado y se decrementa en 1. Es
   			GOTO	LOOP
 		
   			END
+			
+# Esquemático
+![Esquemático](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica1/EsquematicoP1.PNG)
 
 # Simulación Proteus
 Link: [Video de Youtube](https://youtu.be/j6OHJU-kuHc)
