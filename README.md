@@ -152,7 +152,7 @@ La función depende de una unidad básica que definimos de 100ms, puesto que es 
 > Hace un inversión en los bits del registro haciendo los 4 LSB's los MSB's y viceversa. 
 
 # Esquemático
-![Esquemático](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica2/Esquematico.JPEG)
+![Esquemático](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica2/Esquematico.jpeg)
 
 # Conclusión
 En conclusión, se logró el objetivo de la práctica haciendo uso de instrucciones como nop y teniendo en cuenta el tiempo de duración de cada instrucción con el reloj usado y su configuración en los configuration bits, cabe mencionar que este proyecto pudo haberse realizado de una forma más sencilla con la implementación de algún timer y de interrupciones, ya que hasta que no hubiera un cambio de número no se podía cambiar la velocidad, sin embargo los resultados son fructíferos.
