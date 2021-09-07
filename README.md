@@ -527,6 +527,8 @@ En conclusión, se logró el objetivo de la práctica haciendo uso de instruccio
     		GOTO CHECKVEL
     		END
 
+# Video de Simulación
+Link: [Video de Youtube](https://youtu.be/20Z0WnfhyOk)
 
-# Video
+# Video de Implementación
 Link: [Video de Youtube](https://youtu.be/lYw_6ewRUtg)
