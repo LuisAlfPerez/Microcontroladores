@@ -1,72 +1,163 @@
 # Microcontroladores
 # Práctica 2
 
-El objetivo de esta práctica es decodificar un número de 8 bits que será mostrado de manera gráfica en un display de 7 segmentos, por medio de un microcontrolador PIC 18f4550, en lenguaje ensamblador. 
+El objetivo de esta práctica es implementar un sistema basado en microcontrolador. Dicho sistema incrementará un contador cada cierto tiempo. Dicho tiempo podrá ser modificado por el usuario mediante el uso de 2 push-buttons, uno para aumentar la velocidad y otro para disminuirla. El contador será mostrado en un display de 7 segmentos e indicará mediante 5 leds la velocidad seleccionada. De igual manera, se implementó un sexto led en el cual cada invervalo de tiempo, según la velocidad especificada, cambiara de estado. Este led será la salida que podrá ser vista en un oscilador para observar que los periodos son los adecuados.
+
 
 ## Explicación del Código.
 
 Para lograr la práctica se debieron de considerar los siguientes pasos:
-1. Dividir el puerto B en 2 para realizar la suma de ambos registros de 4 bits (0-31).
-2. Sumar ambos registros
-3. Decodificarlo para el display de 7seg.
+1. Cálculo de tiempo de cada instrucción.
+2. Declaración de puertos E/S
+3. Decrementar la cuenta/Resetear la cuenta en caso de 0
+4. Decodificarlo para el display de 7seg.
+5. Cambiar el estado del LED de salida.
+6. Checar cambios de velocidad
+7. Cambiar velocidad y esperar el tiempo necesario.
+8. Loop a partir del paso 3.
 
-### Paso 1: Dividir Puerto B
+### Paso 1: Cálculo de tiempo de cada instrucción.
+Tomando en cuenta un cristal de 20MHz, se hace una conversión en los bits de configuracion resultando en un reloj de 24MHz. Puesto que cada instrucción ocupa 4 ciclos, se obtienen 6M de instrucciones. Sacando el inverso, se obtiene que el tiempo por instrucción es de 166ns.
+
+### Paso 2: Declaración de puertos E/S.
 Para ello, el primer paso de todo el programa, es definir nuestros puertos de E/S
 
-  	SETF	TRISB	    ;THE WHOLE PORT B IS AN INPUT
-  	CLRF	TRISD	    ;THE WHOLE PORT D IS AN OUTPUT
-Después, para la división se crearon dos máscaras.
-* Máscara de MSB's ("11110000")
-* Máscara de LSB's ("00001111")
-Con ellas podemos extraer ambos números independientes de 4 bits. Para poder utilizar los bits más significativo es necesaria la función SWAPF, la cual envía esos 4 MSB's hacía los 4 LSB's y los guarda en el acumulador.
+	SETF	TRISA	    ;THE WHOLE PORT A IS AN INPUT
+	CLRF	TRISB	    ;THE WHOLE PORT B IS AN OUTPUT
+	CLRF	TRISD	    ;THE WHOLE PORT D IS AN OUTPUT
 
-  		MOVF	PORTB, W	
-  		ANDLW	MASK2  ;00001111		
-  		MOVWF	DATA_A
-		
-  		MOVF	PORTB, W	
-  		ANDLW	MASK   ;11110000
-  		MOVWF	DATA_B
-  		SWAPF	DATA_B, W
-		
-  		ADDWF	DATA_A, W
-  		MOVWF	RESULT
-### Paso 2: Sumar ambos registros
-Siendo esto la principal operación a realizar, esta nada más se logra por medio de la suma del acumulador, siendo los MSB's, con los 4 LSB's que fueron guardados la variable DATA_A. Este resultado de la suma es almacenado en la variable RESULT la cual será utilizada en el proceso de decodificación.
-  		ADDWF	DATA_A, W
-  		MOVWF	RESULT
-### Paso 3: Decodificación.
+### Paso 3: Decrementar la cuenta/Resetear la cuenta en caso de 0.
+En el loop, se verifica el estado del contador. En caso de ser igual a 0, entra a una función que resetea la cuenta a 0. De lo contrario, se decrementará y seguirá al siguiente paso.
+
+	MOVLW	0X00
+	CPFSGT	COUNTER
+	GOTO	CONTADOR9
+	MOVLW	0X01
+	CPFSLT	COUNTER
+	DECF	COUNTER
+	
+### Paso 4: Decodificación.
 Ese consiste en un switch el cual recibe el resultado de la operación y los convierte en código para el display de 7 segmentos.
 ![Display de 7 segmentos](https://controlautomaticoeducacion.com/wp-content/uploads/catodo.png)
 Para realizar un switch, se toma el valor del resultado y se decrementa en 1. Este se va recorriendo por todos los números. Hsta que esta resta de igual a 0, se procederá a brincar al número esperado.
 
+### Paso 5: Cambiar el estado del LED de salida.
+Simplemente, si este led estaba en ON, se apagará, y viceversa. Esto como se explicó en los objetivos de la práctica, es para poder ver los periodos en un oscilador y comprobar que los ciclos sean correctos.
+	
+	LEDVEL:
+		INCF	LED_OSC, 1
+		BTFSC	LED_OSC, 0
+		GOTO	LED_ON
+		GOTO	LED_OFF
+	LED_ON:
+    		BSF	PORTB, 5
+    		RETURN
+	LED_OFF:
+    		BCF	PORTB, 5
+    		RETURN
+
+
+### Paso 6: Checar cambios de velocidad
+Puesto que se verifica si algún boton del puerto A, en el momento que se detecta la presión del botón, se espera a que el usuario deje de presionar este para poder interpretar el incremento o decremento de velocidad. Esto sólo es una medida de seguridad. Después, se verifica el estado actual de la velocidad: si este es igual a 5 y quiere incrementar, o si es 0 y quiere decrementar, el programa omitira la presión del botón y continuará con su misma velocidad. De lo contrario, se decrementará o incrementará según el botón que haya apretado. Se guardará el estado actual de la velocidad en una variable para poder después ser usada en un switch y cambiar la velocidad según el número de NOPs a realizar.
+
+	VERIF_A:
+    		BTFSC	PORTA, 0	
+    		GOTO	VERIF_A	    	
+    		MOVLW	0X04
+    		CPFSGT	VELOCIDAD
+    		INCF	VELOCIDAD, 1	;CHECAR NO REBASAR EL 5
+    		MOVLW	0X01
+    		CPFSGT	VELOCIDAD
+    		GOTO	LED1
+    		MOVLW	0X02
+    		CPFSGT	VELOCIDAD
+    		GOTO	LED2
+    		MOVLW	0X03
+    		CPFSGT	VELOCIDAD
+    		GOTO	LED3
+    		MOVLW	0X04
+    		CPFSGT	VELOCIDAD
+    		GOTO	LED4
+    		MOVLW	0X05
+    		CPFSGT	VELOCIDAD
+    		GOTO	LED5
+    		GOTO CHECKVEL
+    
+    VERIF_B:
+    		BTFSC	PORTA, 1	 
+    		GOTO	VERIF_B	    	
+    		MOVLW	0X1
+    		CPFSLT	VELOCIDAD
+    		DECF	VELOCIDAD, 1	;CHECAR NO REBASAR EL 0
+    		MOVLW	0X01
+    		CPFSGT	VELOCIDAD
+    		GOTO	LED1
+    		MOVLW	0X02
+    		CPFSGT	VELOCIDAD
+    		GOTO	LED2
+    		MOVLW	0X03
+    		CPFSGT	VELOCIDAD
+    		GOTO	LED3
+    		MOVLW	0X04
+    		CPFSGT	VELOCIDAD
+    		GOTO	LED4
+    		MOVLW	0X05
+    		CPFSGT	VELOCIDAD
+    		GOTO	LED5
+    		GOTO CHECKVEL
+### Paso 7: Cambiar velocidad y esperar el tiempo necesario.
+La función depende de una unidad básica que definimos de 100ms, puesto que es nuestra velocidad mínima. Para ello, se separo en 4 fors anidados que nos permiten usar los Nops, de una duración de 166ns, hasta completar los 100ms. Posteriormente, se checa si el estado de la velocidad es mayor, se procede a realizar 4 veces este mismo proceso para llegar a los 500ms. En dado caso de ser mayor el estado, se realizará el proceso acumulado 5 veces más para llegar a 1s. Si el estado es mayor, se repetirá el acumulado 4 veces más para llegar a los 5s. Y finalmente, si el estado es 5, se realizara 5 veces más el proceso acumulado de 1 segundo para llegar a los 10 segundos finales. En cualquier caso, se regresará al loop al finalizar su tiempo.
+
 ## Funciones
 
-* MOVLW
-> Mueve una constante al acumulador.
-* MOVWF
-> Mueve el contenido del acumulador a un registro.
-* SETF
-> Cambia todos los bits de un registro a "1". En este caso, se utiliza para definir un registro como entrada.
-* CLRF
-> Cambia todos los bits de un registro a "0". En este caso, se utiliza para definir un registro como salida.
-* DECF
-> Decrementa el contenido de un registro -1
+* ADDWF
+> Suma el contenido del acumulador con el contenido del registro para guardarlo en cualquiera de los dos.
+* ANDLW
+> Realiza la operación AND entre una constante y el contenido del acumulador.
+* BCF
+> Se cambia el estado de un bit especificado de un registro a '0'.
+* BSF
+> Se cambia el estado de un bit especificado de un registro a '1'.
+* BTFSC
+> Verifica el estado de un bit especificado de un registro. Si el bit está en '0', se saltará la siguiente línea. De lo contrario, seguira su flujo sin saltar.
 * BZ
 > En caso de que el contenido en el acumulador sea 0, se procederá a brincar a la dirección señalada.
 * CALL
 > Esta línea hace un brinco o llamado a otra dirección para posteriormente regresar por medio de la instrucción RETURN.
+* CLRF
+> Cambia todos los bits de un registro a "0". En este caso, se utiliza para definir un registro como salida.
+* CPFSGT
+> Compara el contenido de un registro con el del acumulador. Si el contenido del registro es mayor que el acumulador, se saltará la siguiente línea. De lo contrario, seguira su flujo sin saltar.
+* CPFSLT
+> Compara el contenido de un registro con el del acumulador. Si el contenido del registro es menor que el acumulador, se saltará la siguiente línea. De lo contrario, seguira su flujo sin saltar.
+* DECF
+> Decrementa el contenido de un registro -1
+* DECFSZ
+> Decrementa el contenido de un registro -1. Si el contenido del registro es igual a '0', se saltará la siguiente línea. De lo contrario, seguira su flujo sin saltar.
 * GOTO
 > Hace un brinco a la dirección señalada.
-* ADDWF
-> Suma el contenido del acumulador con el contenido del registro para guardarlo en cualquiera de los dos.
+* INCF
+> Incrementa el contenido de un registro +1
+* MOVF
+> Mueve el contenido de un registro al acumulador.
+* MOVLW
+> Mueve una constante al acumulador.
+* MOVWF
+> Mueve el contenido del acumulador a un registro.
+* NOP
+> No Operation: no se realiza ninguna operación, de esta manera se consumen ciclos de operación.
+* SETF
+> Cambia todos los bits de un registro a "1". En este caso, se utiliza para definir un registro como entrada.
 * SWAPF
 > Hace un inversión en los bits del registro haciendo los 4 LSB's los MSB's y viceversa. 
-* ANDLW
-> Realiza la operación AND entre una constante y el contenido del acumulador.
 
 # Esquemático
 ![Esquemático](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica1/EsquematicoP1.PNG)
+
+# Conclusión
+En conclusión, se logró el objetivo de la práctica haciendo uso de instrucciones como nop y teniendo en cuenta el tiempo de duración de cada instrucción con el reloj usado y su configuración en los configuration bits, cabe mencionar que este proyecto pudo haberse realizado de una forma más sencilla con la implementación de algún timer y de interrupciones, ya que hasta que no hubiera un cambio de número no se podía cambiar la velocidad, sin embargo los resultados son fructíferos.
+
+
 
 ## Código
   	;*******Header Files***********
