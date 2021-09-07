@@ -527,8 +527,10 @@ En conclusión, se logró el objetivo de la práctica haciendo uso de instruccio
     		GOTO CHECKVEL
     		END
 
-# Video de Simulación
+# Simulación
 Link: [Video de Youtube](https://youtu.be/20Z0WnfhyOk)
 
-# Video de Implementación
+# Implementación
+![Implementación](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica2/Implementacion1.jpeg)
+![Osciloscopio](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica2/Implementacion2.jpeg)
 Link: [Video de Youtube](https://youtu.be/lYw_6ewRUtg)
