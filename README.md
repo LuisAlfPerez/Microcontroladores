@@ -1,7 +1,7 @@
 # Microcontroladores
 # Práctica Integradora 1
 
-El objetivo de esta práctica es implementar un sistema basado en microcontrolador. Dicho sistema incrementará un contador cada cierto tiempo. Dicho tiempo podrá ser modificado por el usuario mediante el uso de 2 push-buttons, uno para aumentar la velocidad y otro para disminuirla. El contador será mostrado en un display de 7 segmentos e indicará mediante 5 leds la velocidad seleccionada. De igual manera, se implementó un sexto led en el cual cada invervalo de tiempo, según la velocidad especificada, cambiara de estado. Este led será la salida que podrá ser vista en un oscilador para observar que los periodos son los adecuados.
+El objetivo de esta práctica es implementar un sistema basado en microcontrolador. Dicho sistema decrementará un contador cada segundo. Dicho tiempo podrá ser modificado por el usuario mediante el uso de 1 push-button, empezando en 3 minutos y reduciendo de a 1 segundo por cada presionada. El tiempo restante será mostrado en un arreglo de 3 displays de 7 segmentos. Además, se incluyeron 3 botones adiciones, uno para inicio, otro de pausa y un úlitmo de reset. 
 
 
 ## Explicación del Código.
@@ -9,12 +9,9 @@ El objetivo de esta práctica es implementar un sistema basado en microcontrolad
 Para lograr la práctica se debieron de considerar los siguientes pasos:
 1. Cálculo de tiempo de cada instrucción.
 2. Declaración de puertos E/S
-3. Decrementar la cuenta/Resetear la cuenta en caso de 0
-4. Decodificarlo para el display de 7seg.
-5. Cambiar el estado del LED de salida.
-6. Checar cambios de velocidad
-7. Cambiar velocidad y esperar el tiempo necesario.
-8. Loop a partir del paso 3.
+3. Decrementar la cuenta cada segundo.
+4. Realizar la salida binaria para que, después del convertidor, se muestre en los displays de 7seg.
+5. Verificar el estado de los botones, para cada acción pertinente.
 
 ### Paso 1: Cálculo de tiempo de cada instrucción.
 Tomando en cuenta un cristal de 20MHz, se hace una conversión en los bits de configuracion resultando en un reloj de 24MHz. Puesto que cada instrucción ocupa 4 ciclos, se obtienen 6M de instrucciones. Sacando el inverso, se obtiene que el tiempo por instrucción es de 166ns.
@@ -23,90 +20,105 @@ Tomando en cuenta un cristal de 20MHz, se hace una conversión en los bits de co
 Para ello, el primer paso de todo el programa, es definir nuestros puertos de E/S
 
 	SETF	TRISA	    ;THE WHOLE PORT A IS AN INPUT
-	CLRF	TRISB	    ;THE WHOLE PORT B IS AN OUTPUT
-	CLRF	TRISD	    ;THE WHOLE PORT D IS AN OUTPUT
+	CLRF	TRISB	    ;THE WHOLE PORT B IS AN OUTPUT UNIDADES
+	CLRF	TRISC	    ;THE WHOLE PORT C IS AN OUTPUT MIN
+	CLRF	TRISD	    ;THE WHOLE PORT D IS AN OUTPUT MIN
 
-### Paso 3: Decrementar la cuenta/Resetear la cuenta en caso de 0.
+### Paso 3: Inicializar el tiempo en 3 minutos.
 En el loop, se verifica el estado del contador. En caso de ser igual a 0, entra a una función que resetea la cuenta a 0. De lo contrario, se decrementará y seguirá al siguiente paso.
 
-	MOVLW	0X00
-	CPFSGT	COUNTER
-	GOTO	CONTADOR9
-	MOVLW	0X01
-	CPFSLT	COUNTER
-	DECF	COUNTER
+	MOVLW	0X03
+	MOVWF	PORTC	    ;SET TO 3 MINUTES
 	
-### Paso 4: Decodificación.
-Ese consiste en un switch el cual recibe el resultado de la operación y los convierte en código para el display de 7 segmentos.
-![Display de 7 segmentos](https://controlautomaticoeducacion.com/wp-content/uploads/catodo.png)
-Para realizar un switch, se toma el valor del resultado y se decrementa en 1. Este se va recorriendo por todos los números. Hsta que esta resta de igual a 0, se procederá a brincar al número esperado.
+### Paso 4: Verificar si está presionado el botón de pausa.
 
-### Paso 5: Cambiar el estado del LED de salida.
-Simplemente, si este led estaba en ON, se apagará, y viceversa. Esto como se explicó en los objetivos de la práctica, es para poder ver los periodos en un oscilador y comprobar que los ciclos sean correctos.
+	VERIF_PAUSE:
+		BTFSS	PORTA, 0	
+		RETURN
+		GOTO	PAUSE
+
+En caso de estar presionado, se espera hasta que el botón haya sido soltado:
+
+	PAUSE:
+		BTFSC	PORTA, 0	
+		GOTO	PAUSE
+		GOTO	MENU_PAUSED
+		
+Y en cuanto se libere, se para a un menú de pausa, esperando a que haya un nuevo click del usuario:
+
+	MENU_PAUSED:
+		BTFSC	PORTA, 1
+		GOTO	VERIF_PLAY
+		BTFSC	PORTA, 2 
+		GOTO	VERIF_RESET
+		BTFSC	PORTA, 3
+		GOTO	VERIF_LOAD
+		GOTO	MENU_PAUSED
+		
+### Paso 5: Realizar la acción solicitada por el usuario.
+El primer paso es verificar si ya se ha liberado el botón, sin importar cuál haya sido presionado. Para el caso de pausa lo único que hace es regresarlo al loop principal, dejándolo así fuera del menú de pausa.
+
+	VERIF_PLAY:
+		BTFSC	PORTA, 1	
+		GOTO	VERIF_PLAY
+		GOTO	LOOP
+		
+Para el reset, lo que se hace es regresar el valor de 3 minutos y se regresa al menú de pausa a espera del play, o a que se hagan cambios al tiempo.
+		
+	VERIF_RESET:	
+		BTFSC	PORTA, 2 
+		GOTO	VERIF_RESET
+		CLRF	PORTB	    
+		CLRF	PORTD	    
+		MOVLW	0X03
+		MOVWF	PORTC	    ;SET TO 3 MINUTES
+		GOTO	MENU_PAUSED
+		
+En el caso de load, se decrementa llamando a la función COMPARE_UNI (que se muestra a continuación), aunque sigue en pausa. 
+		
+	VERIF_LOAD:
+		BTFSC	PORTA, 3	
+		GOTO	VERIF_LOAD
+		CALL	COMPARE_UNI
+		GOTO	MENU_PAUSED
+		
+### Paso 6: Reducir una unidad al tiempo y asignar el valor correcto de minutos y segundos.
+Se reduce una unidad al digito menos significativo del segundo, en caso de ser mayor a 0, o se cambia para reducir las decenas.
+
+	COMPARE_UNI:
+		MOVLW	0X00
+		CPFSGT	PORTB
+		GOTO	COMPARE_DEC
+		DECF	PORTB
+		CLRF	PORTA
+		RETURN
+
+Se repite el mismo procedimiento, pero ahora la comparación es entre las decenas de segundo y el minuto.		
+		
+	COMPARE_DEC:
+		MOVLW	0X00
+		CPFSGT	PORTD
+		GOTO	DEC_MIN
+		MOVLW	0X09
+		MOVWF	PORTB
+		DECF	PORTD
+		CLRF	PORTA
+		RETURN
 	
-	LEDVEL:
-		INCF	LED_OSC, 1
-		BTFSC	LED_OSC, 0
-		GOTO	LED_ON
-		GOTO	LED_OFF
-	LED_ON:
-    		BSF	PORTB, 5
-    		RETURN
-	LED_OFF:
-    		BCF	PORTB, 5
-    		RETURN
+Se verifica que el tiempo no se haya agotado, si así fue se manda automáticamente al menú de pausa. Si aún hay minutos, solo se decrementa y sigue la cuenta regresiva. 
+	
+	DEC_MIN:
+		MOVLW	0X00
+		CPFSGT	PORTC	
+		GOTO	MENU_PAUSED
+		MOVLW	0x05
+		MOVWF	PORTD
+		MOVLW	0X09
+		MOVWF	PORTB
+		DECF	PORTC
+		CLRF	PORTA
+		RETURN
 
-
-### Paso 6: Checar cambios de velocidad
-Puesto que se verifica si algún boton del puerto A, en el momento que se detecta la presión del botón, se espera a que el usuario deje de presionar este para poder interpretar el incremento o decremento de velocidad. Esto sólo es una medida de seguridad. Después, se verifica el estado actual de la velocidad: si este es igual a 5 y quiere incrementar, o si es 0 y quiere decrementar, el programa omitira la presión del botón y continuará con su misma velocidad. De lo contrario, se decrementará o incrementará según el botón que haya apretado. Se guardará el estado actual de la velocidad en una variable para poder después ser usada en un switch y cambiar la velocidad según el número de NOPs a realizar.
-
-	VERIF_A:
-    		BTFSC	PORTA, 0	
-    		GOTO	VERIF_A	    	
-    		MOVLW	0X04
-    		CPFSGT	VELOCIDAD
-    		INCF	VELOCIDAD, 1	;CHECAR NO REBASAR EL 5
-    		MOVLW	0X01
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED1
-    		MOVLW	0X02
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED2
-    		MOVLW	0X03
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED3
-    		MOVLW	0X04
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED4
-    		MOVLW	0X05
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED5
-    		GOTO CHECKVEL
-    
-    VERIF_B:
-    		BTFSC	PORTA, 1	 
-    		GOTO	VERIF_B	    	
-    		MOVLW	0X1
-    		CPFSLT	VELOCIDAD
-    		DECF	VELOCIDAD, 1	;CHECAR NO REBASAR EL 0
-    		MOVLW	0X01
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED1
-    		MOVLW	0X02
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED2
-    		MOVLW	0X03
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED3
-    		MOVLW	0X04
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED4
-    		MOVLW	0X05
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED5
-    		GOTO CHECKVEL
-### Paso 7: Cambiar velocidad y esperar el tiempo necesario.
-La función depende de una unidad básica que definimos de 100ms, puesto que es nuestra velocidad mínima. Para ello, se separo en 4 fors anidados que nos permiten usar los Nops, de una duración de 166ns, hasta completar los 100ms. Posteriormente, se checa si el estado de la velocidad es mayor, se procede a realizar 4 veces este mismo proceso para llegar a los 500ms. En dado caso de ser mayor el estado, se realizará el proceso acumulado 5 veces más para llegar a 1s. Si el estado es mayor, se repetirá el acumulado 4 veces más para llegar a los 5s. Y finalmente, si el estado es 5, se realizara 5 veces más el proceso acumulado de 1 segundo para llegar a los 10 segundos finales. En cualquier caso, se regresará al loop al finalizar su tiempo.
 
 ## Funciones
 
@@ -155,14 +167,13 @@ La función depende de una unidad básica que definimos de 100ms, puesto que es 
 ![Esquemático](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1cticaIntegradora1/esquematico.png)
 
 # Conclusión
-En conclusión, se logró el objetivo de la práctica haciendo uso de instrucciones como nop y teniendo en cuenta el tiempo de duración de cada instrucción con el reloj usado y su configuración en los configuration bits, cabe mencionar que este proyecto pudo haberse realizado de una forma más sencilla con la implementación de algún timer y de interrupciones, ya que hasta que no hubiera un cambio de número no se podía cambiar la velocidad, sin embargo los resultados son fructíferos.
-
+En conclusión, se logró el objetivo de la práctica haciendo uso de instrucciones como nop y teniendo en cuenta el tiempo de duración de cada instrucción con el reloj usado y su configuración en los configuration bits, tal como en la ![Práctica 2](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica2). Sin embargo, ahora se usó esa lógica para realizar un timer capaz de contar desde los 3 minutos, que se puede pausar, reiniciar, reanudar y personalizar el tiempo.
 
 
 ## Código
 	;*******Header Files***********
-	    list	    p=18f4550        ; list directive to define processor
-	    #include    "p18f4550.inc"
+    list	    p=18f4550        ; list directive to define processor
+    #include    "p18f4550.inc"
 
 	;******Configuration Bits***********
 	; PIC18F4550 Configuration Bit Settings
@@ -379,19 +390,7 @@ En conclusión, se logró el objetivo de la práctica haciendo uso de instruccio
 			GOTO DELAY1US
 			RETURN		
 
-	;LEDVEL:
-			;INCF	LED_OSC, 1
-			;BTFSC	LED_OSC, 0
-			;GOTO	LED_ON
-			;GOTO	LED_OFF
-	;LED_ON:
-			;BSF	PORTB, 5
-			;RETURN
-	;LED_OFF:
-			;BCF	PORTB, 5
-			;RETURN		
 	end
-
 # Simulación
 Link: [Video de Youtube](https://youtu.be/oDA362vVDwo)
 
