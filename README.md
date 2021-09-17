@@ -167,7 +167,7 @@ Se verifica que el tiempo no se haya agotado, si así fue se manda automáticame
 ![Esquemático](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1cticaIntegradora1/esquematico.png)
 
 # Conclusión
-En conclusión, se logró el objetivo de la práctica haciendo uso de instrucciones como nop y teniendo en cuenta el tiempo de duración de cada instrucción con el reloj usado y su configuración en los configuration bits, tal como en la ![Práctica 2](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica2). Sin embargo, ahora se usó esa lógica para realizar un timer capaz de contar desde los 3 minutos, que se puede pausar, reiniciar, reanudar y personalizar el tiempo.
+En conclusión, se logró el objetivo de la práctica haciendo uso de instrucciones como nop y teniendo en cuenta el tiempo de duración de cada instrucción con el reloj usado y su configuración en los configuration bits, tal como en la [Práctica 2](https://github.com/LuisAlfPerez/Microcontroladores/tree/Pr%C3%A1ctica2). Sin embargo, ahora se usó esa lógica para realizar un timer capaz de contar desde los 3 minutos, que se puede pausar, reiniciar, reanudar y personalizar el tiempo.
 
 
 ## Código
