@@ -1,5 +1,5 @@
 # Microcontroladores
-# Práctica 3
+# Práctica 4
 
 El objetivo es implementar un sistema basado en microcontrolador y desarrollado con el compilador XC8 que permita instrumentar un sensor de proximidad midiendo el ancho de pulso  de su señal de salida y mostrar el resultado en un arreglo de displays de 7 segmentos.
 
