@@ -4,3 +4,4 @@
 ## [Práctica Integradora 1](https://github.com/LuisAlfPerez/Microcontroladores/tree/Pr%C3%A1cticaIntegradora1)
 ## [Práctica 3](https://github.com/LuisAlfPerez/Microcontroladores/tree/Pr%C3%A1ctica3)
 ## [Práctica 4](https://github.com/LuisAlfPerez/Microcontroladores/tree/Pr%C3%A1ctica4)
+## [Práctica Integradora 1](https://github.com/LuisAlfPerez/Microcontroladores/tree/Pr%C3%A1cticaIntegradora2)
