@@ -1086,5 +1086,5 @@ void main(void)
 }
 
 # Implementación
-![Esquematico](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica4/Esquematico.jpeg)
+![Esquematico](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica4/Practica4Esquematico.jpeg)
 Link: [Video de Youtube](https://youtu.be/ETZb_EwNfGE)
