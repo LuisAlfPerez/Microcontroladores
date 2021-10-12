@@ -1085,10 +1085,6 @@ void main(void)
     }
 }
 
-# Simulación
-Link: [Video de Youtube](https://youtu.be/20Z0WnfhyOk)
-
 # Implementación
-![Implementación](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica2/Implementacion1.jpeg)
-![Osciloscopio](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica2/Implementacion2.jpeg)
-Link: [Video de Youtube](https://youtu.be/lYw_6ewRUtg)
+![Esquematico](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica4/Esquematico.jpeg)
+Link: [Video de Youtube](https://youtu.be/ETZb_EwNfGE)
