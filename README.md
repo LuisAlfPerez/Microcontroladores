@@ -33,7 +33,7 @@ Así como visto en clase, para una debida conversión a centímetros, la señal 
 	dist = ((time)/29/2);
 
 ### Paso 5: Mostrar en LCD
-Simplemente, si este led estaba en ON, se apagará, y viceversa. Esto como se explicó en los objetivos de la práctica, es para poder ver los periodos en un oscilador y comprobar que los ciclos sean correctos.
+Se envía la distancia con 4 decimales.
 	
 		sprintf(buffer, "Distance %.4f cm", dist);
 		 while(BusyXLCD());
@@ -42,7 +42,7 @@ Simplemente, si este led estaba en ON, se apagará, y viceversa. Esto como se ex
 		    putsXLCD((char *) buffer);
 
 # Conclusión
-En conclusión, se logró el objetivo de la práctica haciendo uso de instrucciones como nop y teniendo en cuenta el tiempo de duración de cada instrucción con el reloj usado y su configuración en los configuration bits, cabe mencionar que este proyecto pudo haberse realizado de una forma más sencilla con la implementación de algún timer y de interrupciones, ya que hasta que no hubiera un cambio de número no se podía cambiar la velocidad, sin embargo los resultados son fructíferos.
+El uso de sensores de verdad nos dio una idea de lo que se necesita para sincronizar con timers éstos. El uso de la pantalla LCD en C fue algo nuevo y nos ayudó a entender cómo funciona.
 
 
 
