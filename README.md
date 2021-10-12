@@ -159,372 +159,931 @@ En conclusión, se logró el objetivo de la práctica haciendo uso de instruccio
 
 
 ## Código
-  	;*******Header Files***********
-        list	    p=18f4550        ; list directive to define processor
-        #include    "p18f4550.inc"  
+#include "mcc.h"
+#include "stdio.h"
+#include "stdlib.h"
+#include <xlcd.h>
 
-    ;******Configuration Bits***********
-    ; PIC18F4550 Configuration Bit Settings 
+void c4_do(){
+    TMR0_StartTimer();
+    while(TMR1Flag == 0){
+        PORTCbits.RC1 = 1;
+        __delay_us(478);
+        PORTCbits.RC1 = 0;
+        __delay_us(478);
+    }
+    TMR1Flag = 0;
+    TMR0_StopTimer();
+}
 
-    ; ASM source line config statements 
 
-    ;#include "p18F4550.inc"    
+void d4_re(){
+    TMR0_StartTimer();
+    while(TMR1Flag == 0){
+        PORTCbits.RC1 = 1;
+        __delay_us(426);
+        PORTCbits.RC1 = 0;
+        __delay_us(426);
+    }
+    TMR1Flag = 0;
+    TMR0_StopTimer();
+}
 
-    ; CONFIG1L
-      CONFIG  PLLDIV = 5            ; PLL Prescaler Selection bits (Divide by 5 (20 MHz oscillator input))
-      CONFIG  CPUDIV = OSC3_PLL4    ; System Clock Postscaler Selection bits ([Primary Oscillator Src: /3][96 MHz PLL Src: /4])
-      CONFIG  USBDIV = 2            ; USB Clock Selection bit (used in Full-Speed USB mode only; UCFG:FSEN = 1) (USB clock source comes from the 96 MHz PLL divided by 2)   
+void e4_mi(){
+    TMR0_StartTimer();
+    while(TMR1Flag == 0){
+        PORTCbits.RC1 = 1;
+        __delay_us(380);
+        PORTCbits.RC1 = 0;
+        __delay_us(380);
+    }
+    TMR1Flag = 0;
+    TMR0_StopTimer();
+}
 
-    ; CONFIG1H
-      CONFIG  FOSC = HSPLL_HS       ; Oscillator Selection bits (HS oscillator, PLL enabled (HSPLL))
-      CONFIG  FCMEN = OFF           ; Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor disabled)
-      CONFIG  IESO = OFF            ; Internal/External Oscillator Switchover bit (Oscillator Switchover mode disabled) 
+void f4_fa(){
+    TMR0_StartTimer();
+    while(TMR1Flag == 0){
+        PORTCbits.RC1 = 1;
+        __delay_us(358);
+        PORTCbits.RC1 = 0;
+        __delay_us(358);
+    }
+    TMR1Flag = 0;
+    TMR0_StopTimer();
+}
 
-    ; CONFIG2L
-      CONFIG  PWRT = ON             ; Power-up Timer Enable bit (PWRT enabled)
-      CONFIG  BOR = OFF             ; Brown-out Reset Enable bits (Brown-out Reset disabled in hardware and software)
-      CONFIG  BORV = 3              ; Brown-out Reset Voltage bits (Minimum setting 2.05V)
-      CONFIG  VREGEN = OFF          ; USB Voltage Regulator Enable bit (USB voltage regulator disabled) 
+void g4_sol(){
+    TMR0_StartTimer();
+    while(TMR1Flag == 0){
+        PORTCbits.RC1 = 1;
+        __delay_us(312);
+        PORTCbits.RC1 = 0;
+        __delay_us(312);
+    }
+    TMR1Flag = 0;
+    TMR0_StopTimer();
+}
 
-    ; CONFIG2H
-      CONFIG  WDT = OFF             ; Watchdog Timer Enable bit (WDT disabled (control is placed on the SWDTEN bit))
-      CONFIG  WDTPS = 32768         ; Watchdog Timer Postscale Select bits (1:32768)    
+void a4_la(){
+    TMR0_StartTimer();
+    while(TMR1Flag == 0){
+        PORTCbits.RC1 = 1;
+        __delay_us(284);
+        PORTCbits.RC1 = 0;
+        __delay_us(284);
+    }
+    TMR1Flag = 0;
+    TMR0_StopTimer();
+}
 
-    ; CONFIG3H
-      CONFIG  CCP2MX = OFF          ; CCP2 MUX bit (CCP2 input/output is multiplexed with RB3)
-      CONFIG  PBADEN = OFF          ; PORTB A/D Enable bit (PORTB<4:0> pins are configured as digital I/O on Reset)
-      CONFIG  LPT1OSC = OFF         ; Low-Power Timer 1 Oscillator Enable bit (Timer1 configured for higher power operation)
-      CONFIG  MCLRE = ON            ; MCLR Pin Enable bit (MCLR pin enabled; RE3 input pin disabled)    
-
-    ; CONFIG4L
-      CONFIG  STVREN = OFF          ; Stack Full/Underflow Reset Enable bit (Stack full/underflow will not cause Reset)
-      CONFIG  LVP = OFF             ; Single-Supply ICSP Enable bit (Single-Supply ICSP disabled)
-      CONFIG  ICPRT = OFF           ; Dedicated In-Circuit Debug/Programming Port (ICPORT) Enable bit (ICPORT disabled)
-      CONFIG  XINST = OFF           ; Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled (Legacy mode))    
-
-    ; CONFIG5L
-      CONFIG  CP0 = OFF             ; Code Protection bit (Block 0 (000800-001FFFh) is not code-protected)
-      CONFIG  CP1 = OFF             ; Code Protection bit (Block 1 (002000-003FFFh) is not code-protected)
-      CONFIG  CP2 = OFF             ; Code Protection bit (Block 2 (004000-005FFFh) is not code-protected)
-      CONFIG  CP3 = OFF             ; Code Protection bit (Block 3 (006000-007FFFh) is not code-protected)  
-
-    ; CONFIG5H
-      CONFIG  CPB = OFF             ; Boot Block Code Protection bit (Boot block (000000-0007FFh) is not code-protected)
-      CONFIG  CPD = OFF             ; Data EEPROM Code Protection bit (Data EEPROM is not code-protected)   
-
-    ; CONFIG6L
-      CONFIG  WRT0 = OFF            ; Write Protection bit (Block 0 (000800-001FFFh) is not write-protected)
-      CONFIG  WRT1 = OFF            ; Write Protection bit (Block 1 (002000-003FFFh) is not write-protected)
-      CONFIG  WRT2 = OFF            ; Write Protection bit (Block 2 (004000-005FFFh) is not write-protected)
-      CONFIG  WRT3 = OFF            ; Write Protection bit (Block 3 (006000-007FFFh) is not write-protected)    
-
-    ; CONFIG6H
-      CONFIG  WRTC = OFF            ; Configuration Register Write Protection bit (Configuration registers (300000-3000FFh) are not write-protected)
-      CONFIG  WRTB = OFF            ; Boot Block Write Protection bit (Boot block (000000-0007FFh) is not write-protected)
-      CONFIG  WRTD = OFF            ; Data EEPROM Write Protection bit (Data EEPROM is not write-protected) 
-
-    ; CONFIG7L
-      CONFIG  EBTR0 = OFF           ; Table Read Protection bit (Block 0 (000800-001FFFh) is not protected from table reads executed in other blocks)
-      CONFIG  EBTR1 = OFF           ; Table Read Protection bit (Block 1 (002000-003FFFh) is not protected from table reads executed in other blocks)
-      CONFIG  EBTR2 = OFF           ; Table Read Protection bit (Block 2 (004000-005FFFh) is not protected from table reads executed in other blocks)
-      CONFIG  EBTR3 = OFF           ; Table Read Protection bit (Block 3 (006000-007FFFh) is not protected from table reads executed in other blocks)   
-
-    ; CONFIG7H
-      CONFIG  EBTRB = OFF           ; Boot Block Table Read Protection bit (Boot block (000000-0007FFh) is not protected from table reads executed in other blocks) 
-
-      ;*****Variables Definition************
-    DATA_A	EQU	0X000
-    DATA_B	EQU	0x001
-    RESULT	EQU	0x002
-    REGISTER EQU	0X003
-    DELAYN	EQU	0X004
-    DELAYN2	EQU	0X005
-    DELAYN3	EQU	0X006
-    DELAYN4	EQU	0X007
-    VELOCIDAD   EQU	0X008
-    COUNTER	EQU	0X009
-    LED_OSC	EQU	0XA
-    CONSTANT    MASK    =b'00000011'
-    CONSTANT    MASK2    =b'00000001'  
-    ;*****Main code**********
-    			ORG     0x000             	;reset vector
-      			GOTO    MAIN              	;go to the main routine
-    INITIALIZE:
-    		MOVLW	0XF
-    		MOVWF	ADCON1
-    		MOVLW	0X000	    ;
-    		MOVWF	DELAYN
-    		SETF	TRISA	    ;THE WHOLE PORT A IS AN INPUT
-    		CLRF	TRISB	    ;THE WHOLE PORT B IS AN OUTPUT
-    		CLRF	TRISD	    ;THE WHOLE PORT D IS AN OUTPUT
-    		MOVLW	0X009
-    		MOVWF	COUNTER
-    		MOVLW	0X001
-    		MOVWF	VELOCIDAD
-    		MOVLW	b'00000001'
-    		MOVWF	PORTB
-    		RETURN
-    MAIN:           
-    		CALL INITIALIZE 
+void b4_si(){
+    TMR0_StartTimer();
+    while(TMR1Flag == 0){
+        PORTCbits.RC1 = 1;
+        __delay_us(253);
+        PORTCbits.RC1 = 0;
+        __delay_us(253);
+    }
+    TMR1Flag = 0;
+    TMR0_StopTimer();
+}
+unsigned char stoplargo(){
+    __delay_ms(50);
+    if(Int3Flag == 1)
+        return 1; 
+    return 0;
+}
+void stopcorto(){
+    __delay_ms(5);   
+}
+void JingleBells(){
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
     
-    LOOP:				
-    		MOVLW	0X00
-    		CPFSGT	COUNTER
-    		GOTO	CONTADOR9
-    		MOVLW	0X01
-    		CPFSLT	COUNTER
-    		DECF	COUNTER
-    F:
-    		CALL	DECODE
-    		CALL	LEDVEL
-    		MOVF	PORTA, W	
-    		ANDLW	MASK		
-    		MOVWF	DATA_A
-    		BZ  CHECKVEL
-    		BTFSC	PORTA,0
-    		GOTO	VERIF_A
-    		BTFSC	PORTA,1
-    		GOTO	VERIF_B
-    		GOTO LOOP
-    CONTADOR9:
-    		MOVLW	0X09
-    		MOVWF	COUNTER
-    		GOTO	F
-    VERIF_A:
-    		BTFSC	PORTA, 0	;this verifies if another button was pressed 
-    		GOTO	VERIF_A	    ;aqui mandar a subir la velocidad con método extra	
-    		MOVLW	0X04
-    		CPFSGT	VELOCIDAD
-    		INCF	VELOCIDAD, 1	;CHECAR NO REBASAR EL 5
-    		MOVLW	0X01
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED1
-    		MOVLW	0X02
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED2
-    		MOVLW	0X03
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED3
-    		MOVLW	0X04
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED4
-    		MOVLW	0X05
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED5
-    		GOTO CHECKVEL
+    if(stoplargo()==1)return;
     
-    VERIF_B:
-    		BTFSC	PORTA, 1	;this verifies if another button was pressed 
-    		GOTO	VERIF_B	    ;aqui mandar a subir la velocidad con método extra	
-    		MOVLW	0X1
-    		CPFSLT	VELOCIDAD
-    		DECF	VELOCIDAD, 1	;CHECAR NO REBASAR EL 5
-    		MOVLW	0X01
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED1
-    		MOVLW	0X02
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED2
-    		MOVLW	0X03
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED3
-    		MOVLW	0X04
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED4
-    		MOVLW	0X05
-    		CPFSGT	VELOCIDAD
-    		GOTO	LED5
-    		GOTO CHECKVEL	 
-    CHECKVEL:
-    		CALL	DELAY100MS	;0.1 S
-    		MOVLW	0X01
-    		CPFSGT	VELOCIDAD
-    		GOTO	LOOP
-    		CALL	DELAY100MS	;0.5S
-    		CALL	DELAY100MS
-    		CALL	DELAY100MS
-    		CALL	DELAY100MS
-    		MOVLW	0X02
-    		CPFSGT	VELOCIDAD
-    		GOTO	LOOP
-    		CALL	DELAY100MS	;1 S
-    		CALL	DELAY100MS
-    		CALL	DELAY100MS
-    		CALL	DELAY100MS
-    		CALL	DELAY100MS
-    		MOVLW	0X03
-    		CPFSGT	VELOCIDAD
-    		GOTO	LOOP
-    		CALL	DELAY1S		;5 S
-    		CALL	DELAY1S
-    		CALL	DELAY1S
-    		CALL	DELAY1S
-    		MOVLW	0X04
-    		CPFSGT	VELOCIDAD
-    		GOTO	LOOP
-    		CALL	DELAY1S		;10 S
-    		CALL	DELAY1S
-    		CALL	DELAY1S
-    		CALL	DELAY1S
-    		CALL	DELAY1S
-    		GOTO	LOOP
-    DELAY1S:
-    		CALL	DELAY100MS
-    		CALL	DELAY100MS
-    		CALL	DELAY100MS
-    		CALL	DELAY100MS
-    		CALL	DELAY100MS
-    		CALL	DELAY100MS
-    		CALL	DELAY100MS
-    		CALL	DELAY100MS
-    		CALL	DELAY100MS
-    		CALL	DELAY100MS
-    		RETURN
-    DELAY100MS:
-    		NOP
-    		MOVLW	0X0A
-    		MOVWF	DELAYN3
-    		CALL DELAY10MS
-    		RETURN
-    DELAY10MS:
-    		NOP
-    		MOVLW	0X63
-    		MOVWF	DELAYN2
-    		CALL	DELAY100US
-    		DECFSZ	DELAYN3
-    		GOTO DELAY10MS
-    		RETURN
-    DELAY100US:			;OK
-    		NOP
-    		MOVLW	0X63
-    		MOVWF	DELAYN
-    		CALL DELAY1US
-    		DECFSZ	DELAYN2
-    		GOTO DELAY100US
-    		RETURN
-    DELAY1US:
-    		NOP
-    		NOP
-    		NOP
-    		DECFSZ	DELAYN
-    		GOTO DELAY1US
-    		RETURN
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
     
-    DECODE: 
-    		MOVLW	0X00
-    		CPFSGT	COUNTER
-    		GOTO	CERO
-    		MOVLW	0X01
-    		CPFSGT	COUNTER
-    		GOTO	UNO
-    		MOVLW	0X02
-    		CPFSGT	COUNTER
-    		GOTO	DOS
-    		MOVLW	0X03
-    		CPFSGT	COUNTER
-    		GOTO	TRES
-    		MOVLW	0X04
-    		CPFSGT	COUNTER
-    		GOTO	CUATRO
-    		MOVLW	0X05
-    		CPFSGT	COUNTER
-    		GOTO	CINCO
-    		MOVLW	0X06
-    		CPFSGT	COUNTER
-    		GOTO	SEIS
-    		MOVLW	0X07
-    		CPFSGT	COUNTER
-    		GOTO	SIETE
-    		MOVLW	0X08
-    		CPFSGT	COUNTER
-    		GOTO	OCHO
-    		MOVLW	0X09
-    		CPFSGT	COUNTER
-    		GOTO	NUEVE
-    CERO: 
-    			 ;hgfedcba
-    		MOVLW	b'00111111'
-    		MOVWF	PORTD
-    		RETURN  
+    if(stoplargo()==1)return;
+    
+    e4_mi();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    
+    if(stoplargo()==1)return;
+    
+    f4_fa();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    
+    if(stoplargo()==1)return;
+    
+    e4_mi();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    g4_sol();
+    
+    if(stoplargo()==1)return;
+    
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    
+    if(stoplargo()==1)return;
+    
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    
+    if(stoplargo()==1)return;
+    
+    e4_mi();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    
+    if(stoplargo()==1)return;
+    
+    f4_fa();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    
+    if(stoplargo()==1)return;
+    
+    g4_sol();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    c4_do();
+    
+    if(stoplargo()==1)return;
+    
+    g4_sol();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    
+    if(stoplargo()==1)return;
+    
+    g4_sol();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    a4_la();
+    
+    if(stoplargo()==1)return;
+    
+    a4_la();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    
+    if(stoplargo()==1)return;
+    
+    a4_la();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    
+    if(stoplargo()==1)return;
+    
+    g4_sol();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    
+    if(stoplargo()==1)return;
+    
+    g4_sol();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    a4_la();
+    
+    if(stoplargo()==1)return;
+    
+    a4_la();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    
+    if(stoplargo()==1)return;
+    
+    a4_la();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+    
+    if(stoplargo()==1)return;
+    
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    
+    if(stoplargo()==1)return;
+    
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    
+    if(stoplargo()==1)return;
+    
+    e4_mi();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    
+   if(stoplargo()==1)return;
+    
+    f4_fa();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    
+    if(stoplargo()==1)return;
+    
+    e4_mi();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    g4_sol();
+    
+    if(stoplargo()==1)return;
+    
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    
+    if(stoplargo()==1)return;
+    
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    
+    if(stoplargo()==1)return;
+    
+    e4_mi();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    
+    if(stoplargo()==1)return;
+    
+    f4_fa();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    
+    if(stoplargo()==1)return;
+    
+    g4_sol();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    c4_do();
+    
+    if(stoplargo()==1)return;
+}
+void MiCorazonEncantado(){
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    d4_re();
 
-    UNO: 
-    		MOVLW	b'00000110'
-    		MOVWF	PORTD
-    		RETURN 
-    
-    DOS: 
-    		MOVLW	b'01011011'
-    		MOVWF	PORTD
-    		RETURN
-    
-    TRES: 
-    		MOVLW	b'01001111'
-    		MOVWF	PORTD
-    		RETURN  
+    if(stoplargo()==1)return;
 
-    CUATRO: 
-    		MOVLW	b'01100110'
-    		MOVWF	PORTD
-    		RETURN  
+    e4_mi();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    b4_si();
+    stopcorto();
+    a4_la();
 
-    CINCO: 
-    		MOVLW	b'01101101'
-    		MOVWF	PORTD
-    		RETURN
+    if(stoplargo()==1)return;
+
+    a4_la();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    f4_fa();
+
+    if(stoplargo()==1)return;
+
+    e4_mi();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    b4_si();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    e4_mi();
+
+    if(stoplargo()==1)return;
+
+    c4_do();
+    stopcorto();
+    b4_si();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+
+    if(stoplargo()==1)return;
+
+    c4_do();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    a4_la();
+
+    if(stoplargo()==1)return;
+
+    a4_la();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    g4_sol();
+
+    if(stoplargo()==1)return;
+
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    g4_sol();
+
+    if(stoplargo()==1)return;
+
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    g4_sol();
+
+    if(stoplargo()==1)return;
+
+    a4_la();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+
+    if(stoplargo()==1)return;
+
+    g4_sol();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    f4_fa();
+
+    if(stoplargo()==1)return;
+
+    d4_re();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+
+    if(stoplargo()==1)return;
+
+    d4_re();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    a4_la();
+
+    if(stoplargo()==1)return;
+
+    g4_sol();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    c4_do();
+
+    if(stoplargo()==1)return;
+
+    c4_do();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    g4_sol();
+
+    if(stoplargo()==1)return;
+}
+void Martinillo(){
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    c4_do();
+    stopcorto();
+
+    if(stoplargo()==1)return;
     
-    SEIS: 
-    		MOVLW	b'01111101'
-    		MOVWF	PORTD
-    		RETURN
+    e4_mi();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    c4_do();
+    stopcorto();
+
+    if(stoplargo()==1)return;
+
+    g4_sol();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    a4_la();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    f4_fa();
+    stopcorto();
+    e4_mi();
+    stopcorto();
+    c4_do();
+    stopcorto();
+
+    if(stoplargo()==1)return;
+
+    d4_re();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    c4_do();
+    stopcorto();
+    d4_re();
+    stopcorto();
+    g4_sol();
+    stopcorto();
+    c4_do();
+    stopcorto();
+
+    if(stoplargo()==1)return;
+}
+void main(void)
+{
+    // Initialize the device
+    SYSTEM_Initialize();
     
-    SIETE: 
-    		MOVLW	b'00000111'
-    		MOVWF	PORTD
-    		RETURN
+    // Enable the Global Interrupts
+    INTERRUPT_GlobalInterruptEnable();
+
+    // Enable the Peripheral Interrupts
+    INTERRUPT_PeripheralInterruptEnable();
+
+    // Disable the Global Interrupts
+    //INTERRUPT_GlobalInterruptDisable();
+
+    // Disable the Peripheral Interrupts
+    //INTERRUPT_PeripheralInterruptDisable();
     
-    OCHO: 
-    		MOVLW	b'01111111'
-    		MOVWF	PORTD
-    		RETURN
-    
-    NUEVE: 
-    		MOVLW	b'01101111'
-    		MOVWF	PORTD
-    		RETURN
-    LEDVEL:
-    		INCF	LED_OSC, 1
-    		;MOVF	LED_OSC, W
-    		;ANDLW	MASK2
-    		BTFSC	LED_OSC, 0
-    		GOTO	LED_ON
-    		GOTO	LED_OFF
-    LED_ON:
-    		BSF	PORTB, 5
-    		RETURN
-    LED_OFF:
-    		BCF	PORTB, 5
-    		RETURN		
-    LED1:
-    		MOVLW	b'00000001'
-    		MOVWF	PORTB
-    		GOTO CHECKVEL
-    LED2:
-    		MOVLW	b'00000010'
-    		MOVWF	PORTB
-    		GOTO CHECKVEL
-    LED3:
-    		MOVLW	b'00000100'
-    		MOVWF	PORTB
-    		GOTO CHECKVEL
-    LED4:
-    		MOVLW	b'00001000'
-    		MOVWF	PORTB
-    		GOTO CHECKVEL
-    LED5:
-    		MOVLW	b'00010000'
-    		MOVWF	PORTB
-    		GOTO CHECKVEL
-    		END
+    TMR0_WriteTimer(55950);
+    while (1)
+    {
+        Int3Flag = 0;
+        // Add your application code
+        if(Int0Flag == 1)
+        {
+            //cancion 1
+            JingleBells();
+        }
+        if(Int1Flag == 1)
+        {
+            //cancion 2
+            MiCorazonEncantado();
+        }
+        if(Int2Flag == 1)
+        {
+            //cancion 3
+            Martinillo();
+        }
+        
+    }
+}
 
 # Simulación
 Link: [Video de Youtube](https://youtu.be/20Z0WnfhyOk)
