@@ -1,5 +1,5 @@
 # Microcontroladores
-# Práctica Integradora 1
+# Práctica Integradora 2
 
 El objetivo de esta práctica es implementar un sistema basado en microcontrolador. Dicho sistema decrementará un contador cada segundo. Dicho tiempo podrá ser modificado por el usuario mediante el uso de 1 push-button, empezando en 3 minutos y reduciendo de a 1 segundo por cada presionada. El tiempo restante será mostrado en un arreglo de 3 displays de 7 segmentos. Además, se incluyeron 3 botones adiciones, uno para inicio, otro de pausa y un úlitmo de reset. 
 
