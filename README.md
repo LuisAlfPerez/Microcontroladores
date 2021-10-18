@@ -4,6 +4,53 @@
 El objetivo es implementar un sistema basado en microcontrolador y desarrollado con el compilador XC8, que permita instrumentar una bocina o audífonos para reproducir 3 melodías de al menos 20s. Con la ayuda de un 3 push buttons, se seleccionará la melodía a reproducir.
 
 ## Explicación del Código.
+El código funciona con base en interrupciones externas. Puesto que lo único que se hacía era variar la frecuencia de salida para cada una de las notas, se hizo una función para cada una de las notas. Se prende 
+
+	unsigned char stoplargo(){
+		__delay_ms(50);
+		if(Int3Flag == 1)
+			return 1; 
+		return 0;
+	}
+	
+	void stopcorto(){
+	    __delay_ms(5);   
+	}
+
+	void d4_re(){
+		TMR0_StartTimer();
+		while(TMR1Flag == 0){
+			PORTCbits.RC1 = 1;
+			__delay_us(426);
+			PORTCbits.RC1 = 0;
+			__delay_us(426);
+		}
+		TMR1Flag = 0;
+		TMR0_StopTimer();
+	}
+	
+	TMR0_WriteTimer(55950);
+	while (1)
+	{
+		Int3Flag = 0;
+		// Add your application code
+		if(Int0Flag == 1)
+		{
+		    //cancion 1
+		    JingleBells();
+		}
+		if(Int1Flag == 1)
+		{
+		    //cancion 2
+		    MiCorazonEncantado();
+		}
+		if(Int2Flag == 1)
+		{
+		    //cancion 3
+		    Martinillo();
+		}
+	}
+	
 ![Notas](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica4/notas.png)
 
 
