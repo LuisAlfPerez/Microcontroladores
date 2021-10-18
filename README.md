@@ -1,7 +1,7 @@
 # Microcontroladores
 # Práctica 4
 
-El objetivo es implementar un sistema basado en microcontrolador y desarrollado con el compilador XC8 que permita instrumentar un sensor de proximidad midiendo el ancho de pulso  de su señal de salida y mostrar el resultado en un arreglo de displays de 7 segmentos.
+El objetivo es implementar un sistema basado en microcontrolador y desarrollado con el compilador XC8, que permita instrumentar una bocina o audífonos para reproducir 3 melodías de al menos 20s. Con la ayuda de un 3 push buttons, se seleccionará la melodía a reproducir.
 
 ## Explicación del Código.
 
