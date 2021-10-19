@@ -4,7 +4,7 @@
 El objetivo es implementar un sistema basado en microcontrolador y desarrollado con el compilador XC8, que permita instrumentar una bocina o audífonos para reproducir 3 melodías de al menos 20s. Con la ayuda de un 3 push buttons, se seleccionará la melodía a reproducir.
 
 ## Explicación del Código.
-El código funciona con base en interrupciones externas. Puesto que lo único que se hacía era variar la frecuencia de salida para cada una de las notas, se hizo una función para cada una de las notas. Se prende 
+El código funciona con base en interrupciones externas. Puesto que lo único que se hacía era variar la frecuencia de salida para cada una de las notas, se hizo una función para cada una de las notas con respecto a timer 1. Timer 0 era el encargado de hacer que sonara y dejara de sonar. Por medio de tres interrupciones se hacía el cambio de canciones, las cuales llamaban las notas a tocar, con una interrupción extra para administrar un cambio de canción durante un stop largo. Las funciones stoplargo() y stopcorto() solo son delays entre versos y notas para que las canciones sonaran bien.
 
 	unsigned char stoplargo(){
 		__delay_ms(50);
@@ -58,7 +58,7 @@ El código funciona con base en interrupciones externas. Puesto que lo único qu
 ![Esquemático](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica4/Practica4Esquematico.jpeg)
 
 # Conclusión
-En conclusión, se logró el objetivo de la práctica haciendo uso de instrucciones como nop y teniendo en cuenta el tiempo de duración de cada instrucción con el reloj usado y su configuración en los configuration bits, cabe mencionar que este proyecto pudo haberse realizado de una forma más sencilla con la implementación de algún timer y de interrupciones, ya que hasta que no hubiera un cambio de número no se podía cambiar la velocidad, sin embargo los resultados son fructíferos.
+El manejo de las interrupciones quedó completamente implementado. Tambien usar dos timers fue un reto para su debida sincronización. 
 
 
 
