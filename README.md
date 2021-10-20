@@ -7,7 +7,7 @@ El objetivo de esta práctica es implementar un sistema basado en microcontrolad
 ## Explicación del Código.
 
 # Esquemático
-![Esquemático](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1cticaIntegradora1/esquematico.png)
+![Esquemático](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica4/Practica4Esquematico.jpeg)
 
 # Conclusión
 En conclusión, se logró el objetivo de la práctica haciendo uso de instrucciones como nop y teniendo en cuenta el tiempo de duración de cada instrucción con el reloj usado y su configuración en los configuration bits, tal como en la [Práctica 4](https://github.com/LuisAlfPerez/Microcontroladores/tree/Pr%C3%A1ctica4). Sin embargo, ahora se usó esa lógica para realizar un timer capaz de contar desde los 3 minutos, que se puede pausar, reiniciar, reanudar y personalizar el tiempo.
