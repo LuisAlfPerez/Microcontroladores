@@ -1,5 +1,5 @@
 # Microcontroladores
-# Práctica 2
+# Práctica 5
 
 El objetivo de esta práctica es implementar un sistema basado en microcontrolador. Dicho sistema incrementará un contador cada cierto tiempo. Dicho tiempo podrá ser modificado por el usuario mediante el uso de 2 push-buttons, uno para aumentar la velocidad y otro para disminuirla. El contador será mostrado en un display de 7 segmentos e indicará mediante 5 leds la velocidad seleccionada. De igual manera, se implementó un sexto led en el cual cada invervalo de tiempo, según la velocidad especificada, cambiara de estado. Este led será la salida que podrá ser vista en un oscilador para observar que los periodos son los adecuados.
 
