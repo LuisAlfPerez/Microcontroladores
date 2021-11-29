@@ -69,257 +69,412 @@ Para realizar un switch, se toma el valor del resultado y se decrementa en 1. Es
 ![Esquemático](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica1/EsquematicoP1.PNG)
 
 ## Código
-  	;*******Header Files***********
-  	    list	    p=18f4550        ; list directive to define processor
-  	    #include    "p18f4550.inc"
+### Código Main del PIC18F4550 para la Música del Videojuego
+	#include "mcc.h"
+	#include "stdio.h"
+	#include "stdlib.h"
+	#include <xlcd.h>
 
-  	;******Configuration Bits***********
-  	; PIC18F4550 Configuration Bit Settings
+	void c4_do(){
+	    //TMR0_StartTimer();
+	    while(counter_vel <= (6-velocidad)){
+		PORTCbits.RC1 = 1;
+		__delay_us(478);
+		PORTCbits.RC1 = 0;
+		__delay_us(478);
+	    }
+	    TMR1Flag = 0;
+	    //TMR0_StopTimer();
+	    counter_vel = 0;
+	}
+	void d4_re(){
+	    //TMR0_StartTimer();
+	    while(counter_vel <= (6-velocidad)){
+		PORTCbits.RC1 = 1;
+		__delay_us(426);
+		PORTCbits.RC1 = 0;
+		__delay_us(426);
+	    }
+	    TMR1Flag = 0;
+	    //TMR0_StopTimer();
+	    counter_vel = 0;
+	}
+	void e4_mi(){
+	    //TMR0_StartTimer();
+	    while(counter_vel <= (6-velocidad)){
+		PORTCbits.RC1 = 1;
+		__delay_us(380);
+		PORTCbits.RC1 = 0;
+		__delay_us(380);
+	    }
+	    TMR1Flag = 0;
+	    //TMR0_StopTimer();
+	    counter_vel = 0;
+	}
+	void f4_fa(){
+	    //TMR0_StartTimer();
+	    while(counter_vel <= (6-velocidad)){
+		PORTCbits.RC1 = 1;
+		__delay_us(358);
+		PORTCbits.RC1 = 0;
+		__delay_us(358);
+	    }
+	    TMR1Flag = 0;
+	    //TMR0_StopTimer();
+	    counter_vel = 0;
+	}
+	void g4_sol(){
+	    //TMR0_StartTimer();
+	    while(counter_vel <= (6-velocidad)){
+		PORTCbits.RC1 = 1;
+		__delay_us(312);
+		PORTCbits.RC1 = 0;
+		__delay_us(312);
+	    }
+	    TMR1Flag = 0;
+	    //TMR0_StopTimer();
+	    counter_vel = 0;
+	}
+	void a4_la(){
+	    //TMR0_StartTimer();
+	    while(counter_vel <= (6-velocidad)){
+		PORTCbits.RC1 = 1;
+		__delay_us(284);
+		PORTCbits.RC1 = 0;
+		__delay_us(284);
+	    }
+	    TMR1Flag = 0;
+	    //TMR0_StopTimer();
+	    counter_vel = 0;
+	}
+	void b4_si(){
+	    //TMR0_StartTimer();
+	    while(counter_vel <= (6-velocidad)){
+		PORTCbits.RC1 = 1;
+		__delay_us(253);
+		PORTCbits.RC1 = 0;
+		__delay_us(253);
+	    }
+	    TMR1Flag = 0;
+	    //TMR0_StopTimer();
+	    counter_vel = 0;
+	}
+	unsigned char stoplargo(){
+	    __delay_ms(50);
+	    if(PORTBbits.RB0 ==  0)
+		return 1; 
+	    return 0;
+	}
+	void stopcorto(){
+	    __delay_ms(5);   
+	}
+	void Martinillo(){
+	    c4_do();
+	    stopcorto();
+	    d4_re();
+	    stopcorto();
+	    e4_mi();
+	    stopcorto();
+	    c4_do();
+	    stopcorto();
+	    c4_do();
+	    stopcorto();
+	    d4_re();
+	    stopcorto();
+	    e4_mi();
+	    stopcorto();
+	    c4_do();
+	    stopcorto();
 
-  	; ASM source line config statements
+	    if(stoplargo()==1)return;
 
-  	;#include "p18F4550.inc"
+	    e4_mi();
+	    stopcorto();
+	    g4_sol();
+	    stopcorto();
+	    c4_do();
+	    stopcorto();
+	    e4_mi();
+	    stopcorto();
+	    g4_sol();
+	    stopcorto();
+	    c4_do();
+	    stopcorto();
 
-  	; CONFIG1L
-  	  CONFIG  PLLDIV = 5            ; PLL Prescaler Selection bits (Divide by 5 (20 MHz oscillator input))
-  	  CONFIG  CPUDIV = OSC3_PLL4    ; System Clock Postscaler Selection bits ([Primary Oscillator Src: /3][96 MHz PLL Src: /4])
-  	  CONFIG  USBDIV = 2            ; USB Clock Selection bit (used in Full-Speed USB mode only; UCFG:FSEN = 1) (USB clock source comes from the 96 MHz PLL divided by 2)
+	    if(stoplargo()==1)return;
 
-  	; CONFIG1H
-  	  CONFIG  FOSC = HSPLL_HS       ; Oscillator Selection bits (HS oscillator, PLL enabled (HSPLL))
-  	  CONFIG  FCMEN = OFF           ; Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor disabled)
-  	  CONFIG  IESO = OFF            ; Internal/External Oscillator Switchover bit (Oscillator Switchover mode disabled)
+	    g4_sol();
+	    stopcorto();
+	    a4_la();
+	    stopcorto();
+	    g4_sol();
+	    stopcorto();
+	    f4_fa();
+	    stopcorto();
+	    e4_mi();
+	    stopcorto();
+	    c4_do();
+	    stopcorto();
+	    g4_sol();
+	    stopcorto();
+	    a4_la();
+	    stopcorto();
+	    g4_sol();
+	    stopcorto();
+	    f4_fa();
+	    stopcorto();
+	    e4_mi();
+	    stopcorto();
+	    c4_do();
+	    stopcorto();
 
-  	; CONFIG2L
-  	  CONFIG  PWRT = ON             ; Power-up Timer Enable bit (PWRT enabled)
-  	  CONFIG  BOR = OFF             ; Brown-out Reset Enable bits (Brown-out Reset disabled in hardware and software)
-  	  CONFIG  BORV = 3              ; Brown-out Reset Voltage bits (Minimum setting 2.05V)
-  	  CONFIG  VREGEN = OFF          ; USB Voltage Regulator Enable bit (USB voltage regulator disabled)
+	    if(stoplargo()==1)return;
 
-  	; CONFIG2H
-  	  CONFIG  WDT = OFF             ; Watchdog Timer Enable bit (WDT disabled (control is placed on the SWDTEN bit))
-  	  CONFIG  WDTPS = 32768         ; Watchdog Timer Postscale Select bits (1:32768)
+	    d4_re();
+	    stopcorto();
+	    g4_sol();
+	    stopcorto();
+	    c4_do();
+	    stopcorto();
+	    d4_re();
+	    stopcorto();
+	    g4_sol();
+	    stopcorto();
+	    c4_do();
+	    stopcorto();
 
-  	; CONFIG3H
-  	  CONFIG  CCP2MX = OFF          ; CCP2 MUX bit (CCP2 input/output is multiplexed with RB3)
-  	  CONFIG  PBADEN = OFF          ; PORTB A/D Enable bit (PORTB<4:0> pins are configured as digital I/O on Reset)
-  	  CONFIG  LPT1OSC = OFF         ; Low-Power Timer 1 Oscillator Enable bit (Timer1 configured for higher power operation)
-  	  CONFIG  MCLRE = ON            ; MCLR Pin Enable bit (MCLR pin enabled; RE3 input pin disabled)
+	    if(stoplargo()==1)return;
+	}
+	void main(void)
+	{
+	    // Initialize the device
+	    SYSTEM_Initialize();
 
-  	; CONFIG4L
-  	  CONFIG  STVREN = OFF          ; Stack Full/Underflow Reset Enable bit (Stack full/underflow will not cause Reset)
-  	  CONFIG  LVP = OFF             ; Single-Supply ICSP Enable bit (Single-Supply ICSP disabled)
-  	  CONFIG  ICPRT = OFF           ; Dedicated In-Circuit Debug/Programming Port (ICPORT) Enable bit (ICPORT disabled)
-  	  CONFIG  XINST = OFF           ; Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled (Legacy mode))
+	    // Enable the Global Interrupts
+	    INTERRUPT_GlobalInterruptEnable();
 
-  	; CONFIG5L
-  	  CONFIG  CP0 = OFF             ; Code Protection bit (Block 0 (000800-001FFFh) is not code-protected)
-  	  CONFIG  CP1 = OFF             ; Code Protection bit (Block 1 (002000-003FFFh) is not code-protected)  
-  	  CONFIG  CP2 = OFF             ; Code Protection bit (Block 2 (004000-005FFFh) is not code-protected)
-  	  CONFIG  CP3 = OFF             ; Code Protection bit (Block 3 (006000-007FFFh) is not code-protected)
+	    // Enable the Peripheral Interrupts
+	    INTERRUPT_PeripheralInterruptEnable();
 
-  	; CONFIG5H
-  	  CONFIG  CPB = OFF             ; Boot Block Code Protection bit (Boot block (000000-0007FFh) is not code-protected)
-  	  CONFIG  CPD = OFF             ; Data EEPROM Code Protection bit (Data EEPROM is not code-protected)
+	    // Disable the Global Interrupts
+	    //INTERRUPT_GlobalInterruptDisable();
 
-  	; CONFIG6L
-  	  CONFIG  WRT0 = OFF            ; Write Protection bit (Block 0 (000800-001FFFh) is not write-protected)
-  	  CONFIG  WRT1 = OFF            ; Write Protection bit (Block 1 (002000-003FFFh) is not write-protected)
-  	  CONFIG  WRT2 = OFF            ; Write Protection bit (Block 2 (004000-005FFFh) is not write-protected)
-  	  CONFIG  WRT3 = OFF            ; Write Protection bit (Block 3 (006000-007FFFh) is not write-protected)
+	    // Disable the Peripheral Interrupts
+	    //INTERRUPT_PeripheralInterruptDisable();
 
-  	; CONFIG6H
-  	  CONFIG  WRTC = OFF            ; Configuration Register Write Protection bit (Configuration registers (300000-3000FFh) are not write-protected)
-  	  CONFIG  WRTB = OFF            ; Boot Block Write Protection bit (Boot block (000000-0007FFh) is not write-protected)
-  	  CONFIG  WRTD = OFF            ; Data EEPROM Write Protection bit (Data EEPROM is not write-protected)
+	    TMR0_WriteTimer(53816);
+	    //TMR0_WriteTimer(18660); //prescaler 110 1SEC
+	    counter = 0;
+	    while (1)
+	    {
+		if (PORTBbits.RB0 == 1){
+		    TMR0_StartTimer();
+		    Martinillo();
+		}
+		else{
+		    TMR0_StopTimer();
+		    counter=0;
+		    counter2=0;
+		    velocidad=1;
+		}        
+	    }
+	}
+### Código Main del PIC18F4550 para el Videojuego
+	/**
+	  Generated Main Source File
 
-  	; CONFIG7L
-  	  CONFIG  EBTR0 = OFF           ; Table Read Protection bit (Block 0 (000800-001FFFh) is not protected from table reads executed in other blocks)
-  	  CONFIG  EBTR1 = OFF           ; Table Read Protection bit (Block 1 (002000-003FFFh) is not protected from table reads executed in other blocks)
-  	  CONFIG  EBTR2 = OFF           ; Table Read Protection bit (Block 2 (004000-005FFFh) is not protected from table reads executed in other blocks)
-  	  CONFIG  EBTR3 = OFF           ; Table Read Protection bit (Block 3 (006000-007FFFh) is not protected from table reads executed in other blocks)
+	  Company:
+	    Microchip Technology Inc.
 
-  	; CONFIG7H
-  	  CONFIG  EBTRB = OFF           ; Boot Block Table Read Protection bit (Boot block (000000-0007FFh) is not protected from table reads executed in other blocks)
+	  File Name:
+	    main.c
 
-  	  ;*****Variables Definition************
-  	DATA_A	EQU	0X000
-  	DATA_B	EQU	0x001
-  	RESULT	EQU	0x002
-  	REGISTER EQU	0X003
-  	CONSTANT    MASK    =b'11110000'
-  	CONSTANT    MASK2   =b'00001111'
-    
-  	;*****Main code**********
-  				ORG     0x000             	;reset vector
-  	  			GOTO    MAIN              	;go to the main routine
-  	INITIALIZE:
-  			MOVLW	0XF
-  			MOVWF	ADCON1
-  			SETF	TRISB	    ;THE WHOLE PORT B IS AN INPUT
-  			CLRF	TRISD	    ;THE WHOLE PORT D IS AN OUTPUT		
-		
-  			RETURN
-  	MAIN:           
-  			CALL INITIALIZE 
-		
-  	LOOP:				
-  			MOVF	PORTB, W	
-  			ANDLW	MASK2		
-  			MOVWF	DATA_A
-		
-  			MOVF	PORTB, W	
-  			ANDLW	MASK
-  			MOVWF	DATA_B
-  			SWAPF	DATA_B, W
-		
-  			ADDWF	DATA_A, W
-  			MOVWF	RESULT
-		
-  			CALL DECODE
-		
-  			GOTO LOOP
+	  Summary:
+	    This is the main file generated using MPLAB(c) Code Configurator
 
-  	DECODE: 
-  			MOVWF	RESULT
-  			BZ	CERO
-  			DECF	RESULT, W
-  			BZ	UNO
-  			MOVWF	RESULT
-  			DECF	RESULT, W
-  			BZ	DOS
-  			MOVWF	RESULT
-  			DECF	RESULT, W
-  			BZ	TRES
-  			MOVWF	RESULT
-  			DECF	RESULT, W
-  			BZ	CUATRO
-  			MOVWF	RESULT
-  			DECF	RESULT, W
-  			BZ	CINCO
-  			MOVWF	RESULT
-  			DECF	RESULT, W
-  			BZ	SEIS
-  			MOVWF	RESULT
-  			DECF	RESULT, W
-  			BZ	SIETE
-  			MOVWF	RESULT
-  			DECF	RESULT, W
-  			BZ	OCHO
-  			MOVWF	RESULT
-  			DECF	RESULT, W
-  			BZ	NUEVE
-  			MOVWF	RESULT
-  			DECF	RESULT, W
-  			BZ	DIEZ
-  			MOVWF	RESULT
-  			DECF	RESULT, W
-  			BZ	ONCE
-  			MOVWF	RESULT
-  			DECF	RESULT, W
-  			BZ	DOCE
-  			MOVWF	RESULT
-  			DECF	RESULT, W
-  			BZ	TRECE
-  			MOVWF	RESULT
-  			DECF	RESULT, W
-  			BZ	CATORCE
-  			MOVWF	RESULT
-  			DECF	RESULT, W
-  			BZ	QUINCE
-  			MOVWF	RESULT
-  			GOTO	MAYOR
-  	CERO: 
-  				 ;hgfedcba
-  			MOVLW	b'00111111'
-  			MOVWF	PORTD
-  			GOTO	LOOP
+	  Description:
+	    This header file provides implementations for driver APIs for all modules selected in the GUI.
+	    Generation Information :
+		Product Revision  :  MPLAB(c) Code Configurator - 3.15.0
+		Device            :  PIC18F4550
+		Driver Version    :  2.00
+	    The generated drivers are tested against the following:
+		Compiler          :  XC8 1.35
+		MPLAB             :  MPLAB X 3.20
+	*/
 
-  	UNO: 
-  			MOVLW	b'00000110'
-  			MOVWF	PORTD
-  			GOTO	LOOP
-		
-  	DOS: 
-  			MOVLW	b'01011011'
-  			MOVWF	PORTD
-  			GOTO	LOOP
-		
-  	TRES: 
-  			MOVLW	b'01001111'
-  			MOVWF	PORTD
-  			GOTO	LOOP
+	/*
+	    (c) 2016 Microchip Technology Inc. and its subsidiaries. You may use this
+	    software and any derivatives exclusively with Microchip products.
 
-  	CUATRO: 
-  			MOVLW	b'01100110'
-  			MOVWF	PORTD
-  			GOTO	LOOP
+	    THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+	    EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+	    WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+	    PARTICULAR PURPOSE, OR ITS INTERACTION WITH MICROCHIP PRODUCTS, COMBINATION
+	    WITH ANY OTHER PRODUCTS, OR USE IN ANY APPLICATION.
 
-  	CINCO: 
-  			MOVLW	b'01101101'
-  			MOVWF	PORTD
-  			GOTO	LOOP
-		
-  	SEIS: 
-  			MOVLW	b'01111101'
-  			MOVWF	PORTD
-  			GOTO	LOOP
-		
-  	SIETE: 
-  			MOVLW	b'00000111'
-  			MOVWF	PORTD
-  			GOTO	LOOP
-		
-  	OCHO: 
-  			MOVLW	b'01111111'
-  			MOVWF	PORTD
-  			GOTO	LOOP
-		
-  	NUEVE: 
-  			MOVLW	b'01101111'
-  			MOVWF	PORTD
-  			GOTO	LOOP
-		
-  	DIEZ: 
-  			MOVLW	b'01110111'
-  			MOVWF	PORTD
-  			GOTO	LOOP
-		
-  	ONCE: 
-  			MOVLW	b'01111100'
-  			MOVWF	PORTD
-  			GOTO	LOOP
-		
-  	DOCE: 
-  			MOVLW	b'00111001'
-  			MOVWF	PORTD
-  			GOTO	LOOP
+	    IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+	    INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+	    WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+	    BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+	    FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+	    ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+	    THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
-  	TRECE: 
-  			MOVLW	b'01011110'
-  			MOVWF	PORTD
-  			GOTO	LOOP
-		
-  	CATORCE: 
-  			MOVLW	b'01111001'
-  			MOVWF	PORTD
-  			GOTO	LOOP
-		
-  	QUINCE: 
-  			MOVLW	b'01110001'
-  			MOVWF	PORTD
-  			GOTO	LOOP
-		
-  	MAYOR: 
-  			MOVLW	b'00100011'
-  			MOVWF	PORTD
-  			GOTO	LOOP
-		
-  			END
-			
-# Simulación Proteus
-Link: [Video de Youtube](https://youtu.be/j6OHJU-kuHc)
+	    MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE
+	    TERMS.
+	*/
+
+	#include "mcc.h"
+	#include "stdio.h"
+	#include "stdlib.h"
+	#include <xlcd.h>
+
+	/*
+				 Main application
+	 */
+
+	void main(void)
+	{
+	    // Initialize the device
+	    SYSTEM_Initialize();
+
+
+	    // Enable the Global Interrupts
+	    INTERRUPT_GlobalInterruptEnable();
+
+	    // Enable the Peripheral Interrupts
+	    INTERRUPT_PeripheralInterruptEnable();
+
+	    // Disable the Global Interrupts
+	    //INTERRUPT_GlobalInterruptDisable();
+
+	    // Disable the Peripheral Interrupts
+	    //INTERRUPT_PeripheralInterruptDisable();
+
+
+
+	    // the car is shown in the first position
+	    while (BusyXLCD ());
+	    SetDDRamAddr(car_position);
+
+	    while (BusyXLCD());
+	    WriteDataXLCD(car);
+
+	    //the obstacles are shown, top row
+	    for(unsigned char i=0; i < 10; i++)
+	    {
+		while(BusyXLCD());
+		SetDDRamAddr(top_row[i]);
+
+		while(BusyXLCD());
+		WriteDataXLCD(obstacle);
+	    }
+
+
+	    //bottom row
+	    for(unsigned char i=0; i < 10; i++)
+	    {
+		while(BusyXLCD());
+		SetDDRamAddr(bottom_row[i]);
+
+		while(BusyXLCD());
+		WriteDataXLCD(obstacle);
+	    }
+
+	    //cursor off
+	    while(BusyXLCD());
+	    WriteCmdXLCD(0b00001100);
+
+
+	    while (1)
+	    {
+		myKey = GetKey_sim();
+		car_previous = car_position; //para poder borrar la posición anterior del carrito y después dibujar la nueva
+
+		switch (myKey)
+		{
+		    case 'A': //DETENER JUEGO
+			//SE limpia el LCD
+			while (BusyXLCD());
+			WriteCmdXLCD(0b00000001);
+
+			//Se posiciona el cursor a la mitad del LCD de la parte de arriba
+			while (BusyXLCD ());
+			SetDDRamAddr(7);
+
+			//Escribe GAME en la parte de arriba del LCD
+			while(BusyXLCD());
+			putrsXLCD("GAME");
+
+			//Se posiciona el cursor a la mitad del LCD de la parte de abajo
+			while (BusyXLCD ());
+			SetDDRamAddr(71);
+
+			//Escribe GAME en la parte de abajo del LCD
+			while(BusyXLCD());
+			putrsXLCD("OVER!");
+
+			Sleep();
+
+			break;
+
+		    case 'B': //PAUSAR JUEGO
+			while (myKey != 'C') //REANUDAR JUEGO
+			{
+			    //no hace nada
+			}
+			break;
+
+		    case '2': //SUBIR
+			if (car_position >=64) //si el carrito se encuentra en la fila de abajo
+			{
+			    car_previous = car_position; //la car_previous almancena la posición actual antes de subir, para así borrar ese carrito
+			    car_position = car_position - 64; //el carrito va a subir, esto se logra restándole a su posición actual 64
+			    real_car = real_car - 64;
+			}
+			break;
+
+		    case '5': //BAJAR
+			if (car_position <=16) //si el carrito se encuentra en la fila de arriba
+			{
+			    car_previous = car_position; //la car_previous almancena la posición actual antes de subir, para así borrar ese carrito
+			    car_position = car_position + 64; //el carrito va a subir, esto se logra restándole a su posición actual 64
+			    real_car = real_car + 64;
+			}
+			break;
+		}
+
+		//desplazamiento de obstáculos
+		//__delay_us(4000);
+		while(BusyXLCD());
+		//WriteCmdXLCD(SHIFT_DISP_LEFT);
+		WriteCmdXLCD(0b00011000);
+
+
+		//Revalidar la posición del carrito
+		if (car_position < 64 && car_position > 39) //si el carrito se encuentra arriba y ya pasó el último obstáculo
+		{
+		    real_car = 0; //variable que checa si ya colisiono el carrito con alguno de los obstáculos
+				  //se reinicia la variable
+		}
+
+		if (car_position > 100) //si el carrito se encuentra abajo y ya pasó el último obstáculo
+		{
+		    real_car = 64; //la variable se reinicia a la primera posición de la fila de abajo
+		}
+
+
+
+	    }
+	}
+
+
+
+	/**
+	 End of File
+	*/
 
 # Video
-Link: [Video de Youtube](https://www.youtube.com/embed/fEcTEmr6Qyo)
+Link: [Video de Youtube](https://youtu.be/910YCigk5no)
 
