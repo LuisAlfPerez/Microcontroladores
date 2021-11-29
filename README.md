@@ -40,33 +40,8 @@ Ese consiste en un switch el cual recibe el resultado de la operación y los con
 ![Display de 7 segmentos](https://controlautomaticoeducacion.com/wp-content/uploads/catodo.png)
 Para realizar un switch, se toma el valor del resultado y se decrementa en 1. Este se va recorriendo por todos los números. Hsta que esta resta de igual a 0, se procederá a brincar al número esperado.
 
-## Funciones
-
-* MOVLW
-> Mueve una constante al acumulador.
-* MOVWF
-> Mueve el contenido del acumulador a un registro.
-* SETF
-> Cambia todos los bits de un registro a "1". En este caso, se utiliza para definir un registro como entrada.
-* CLRF
-> Cambia todos los bits de un registro a "0". En este caso, se utiliza para definir un registro como salida.
-* DECF
-> Decrementa el contenido de un registro -1
-* BZ
-> En caso de que el contenido en el acumulador sea 0, se procederá a brincar a la dirección señalada.
-* CALL
-> Esta línea hace un brinco o llamado a otra dirección para posteriormente regresar por medio de la instrucción RETURN.
-* GOTO
-> Hace un brinco a la dirección señalada.
-* ADDWF
-> Suma el contenido del acumulador con el contenido del registro para guardarlo en cualquiera de los dos.
-* SWAPF
-> Hace un inversión en los bits del registro haciendo los 4 LSB's los MSB's y viceversa. 
-* ANDLW
-> Realiza la operación AND entre una constante y el contenido del acumulador.
-
 # Esquemático
-![Esquemático](https://github.com/LuisAlfPerez/Microcontroladores/blob/Pr%C3%A1ctica1/EsquematicoP1.PNG)
+![Esquemático](https://github.com/LuisAlfPerez/Microcontroladores/blob/ProyectoFinal/Esquematico.jpeg)
 
 ## Código
 ### Código Main del PIC18F4550 para la Música del Videojuego
