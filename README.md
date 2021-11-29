@@ -1,5 +1,5 @@
 # Microcontroladores
-# Práctica 1
+# Proyecto Final
 
 El objetivo de esta práctica es decodificar un número de 8 bits que será mostrado de manera gráfica en un display de 7 segmentos, por medio de un microcontrolador PIC 18f4550, en lenguaje ensamblador. 
 
