@@ -1,44 +1,19 @@
 # Microcontroladores
 # Proyecto Final
 
-El objetivo de esta práctica es decodificar un número de 8 bits que será mostrado de manera gráfica en un display de 7 segmentos, por medio de un microcontrolador PIC 18f4550, en lenguaje ensamblador. 
-
-## Explicación del Código.
-
-Para lograr la práctica se debieron de considerar los siguientes pasos:
-1. Dividir el puerto B en 2 para realizar la suma de ambos registros de 4 bits (0-31).
-2. Sumar ambos registros
-3. Decodificarlo para el display de 7seg.
-
-### Paso 1: Dividir Puerto B
-Para ello, el primer paso de todo el programa, es definir nuestros puertos de E/S
-
-  	SETF	TRISB	    ;THE WHOLE PORT B IS AN INPUT
-  	CLRF	TRISD	    ;THE WHOLE PORT D IS AN OUTPUT
-Después, para la división se crearon dos máscaras.
-* Máscara de MSB's ("11110000")
-* Máscara de LSB's ("00001111")
-Con ellas podemos extraer ambos números independientes de 4 bits. Para poder utilizar los bits más significativo es necesaria la función SWAPF, la cual envía esos 4 MSB's hacía los 4 LSB's y los guarda en el acumulador.
-
-  		MOVF	PORTB, W	
-  		ANDLW	MASK2  ;00001111		
-  		MOVWF	DATA_A
-		
-  		MOVF	PORTB, W	
-  		ANDLW	MASK   ;11110000
-  		MOVWF	DATA_B
-  		SWAPF	DATA_B, W
-		
-  		ADDWF	DATA_A, W
-  		MOVWF	RESULT
-### Paso 2: Sumar ambos registros
-Siendo esto la principal operación a realizar, esta nada más se logra por medio de la suma del acumulador, siendo los MSB's, con los 4 LSB's que fueron guardados la variable DATA_A. Este resultado de la suma es almacenado en la variable RESULT la cual será utilizada en el proceso de decodificación.
-  		ADDWF	DATA_A, W
-  		MOVWF	RESULT
-### Paso 3: Decodificación.
-Ese consiste en un switch el cual recibe el resultado de la operación y los convierte en código para el display de 7 segmentos.
-![Display de 7 segmentos](https://controlautomaticoeducacion.com/wp-content/uploads/catodo.png)
-Para realizar un switch, se toma el valor del resultado y se decrementa en 1. Este se va recorriendo por todos los números. Hsta que esta resta de igual a 0, se procederá a brincar al número esperado.
+El objetivo de esta práctica es diseñar un juego en el que a través de un potenciómetro se controla la posición de un objeto. El usuario lo puede mover entre las tres líneas y el objetivo será interactuar con el escenario propuesto. Las condiciones del juego son las siguientes: 
+* El juego se mantendrá en funcóon por 1 minuto y 30 segundos
+* Por cada segundo que transcurra del juego, el usuario gana 1 punto. 
+* En caso de caer en un obstáculo se le resta 1 punto, por cada 15 segundos de juego, el movimiento del escenario incrementa su velocidad. 
+* De igual forma, el factor multiplicativo de velocidad se usa para definir los puntos al jugador. Por
+ejemplo, para el tiempo de juego entre 15 y 29 segundos, los puntos al jugador por cada segundo son +2
+y al caer en un obstáculo son -2; del tiempo entre los 30 y 44 segundos, los puntos por cada segundo de
+juego son +3 y al caer en un obstáculo son -3 y así sucesivamente.
+* Los puntos que va acumulando el jugador se muestran en la pantalla LCD y se mostrará en la extrema
+derecha inferior, el puntaje más alto obtenido
+* El potenciómetro para la manipulación del objeto en el juego, debe de ser capaz de girar los 270°
+* Al momento de comenzar el juego se reproduce una melodía. De igual manera que la velocidad del
+escenario, el factor multiplicativo de la tabla 1 se emplea para la velocidad de reproducci´on de la melodía.
 
 # Esquemático
 ![Esquemático](https://github.com/LuisAlfPerez/Microcontroladores/blob/ProyectoFinal/Esquematico.jpeg)
